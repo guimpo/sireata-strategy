@@ -2,17 +2,17 @@ package br.edu.utfpr.dv.sireata.dao.algorithms.anexo;
 
 import br.edu.utfpr.dv.sireata.dao.ConnectionDAO;
 import br.edu.utfpr.dv.sireata.dao.DAOEntity;
-import br.edu.utfpr.dv.sireata.dao.algorithms.BuscarPorIdDAO;
 import br.edu.utfpr.dv.sireata.model.Anexo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import br.edu.utfpr.dv.sireata.dao.algorithms.BuscarDAO;
 
-public class AnexoBuscarPorIdDAO implements BuscarPorIdDAO {
+public class AnexoBuscarPorIdDAO implements BuscarDAO {
 
     @Override
-    public DAOEntity buscarPorId(int id) throws Exception {
+    public DAOEntity buscar(int id) throws Exception {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
