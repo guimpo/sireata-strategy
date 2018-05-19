@@ -17,6 +17,10 @@ import br.edu.utfpr.dv.sireata.dao.AtaDAO;
 import br.edu.utfpr.dv.sireata.dao.AtaParticipanteDAO;
 import br.edu.utfpr.dv.sireata.dao.OrgaoDAO;
 import br.edu.utfpr.dv.sireata.dao.PautaDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoBuscarPorIdDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoExcluirDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoListarPorAtaDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoSalvarDAO;
 import br.edu.utfpr.dv.sireata.model.Anexo;
 import br.edu.utfpr.dv.sireata.model.Ata;
 import br.edu.utfpr.dv.sireata.model.Pauta;
@@ -188,52 +192,57 @@ public class AtaBO {
 	}
 	
 	public int salvar(Ata ata) throws Exception{
-		try{
-			AtaDAO dao = new AtaDAO();
-			
-			int id = dao.salvar(ata);
-			
-			if(ata.getPauta() != null){
-				int i = 1;
-				
-				for(Pauta p : ata.getPauta()){
-					PautaDAO pdao = new PautaDAO();
-					
-					p.getAta().setIdAta(id);
-					p.setOrdem(i);
-					pdao.salvar(p);
-					i++;
-				}
-			}
-			
-			if(ata.getParticipantes() != null){
-				for(AtaParticipante p : ata.getParticipantes()){
-					AtaParticipanteDAO pdao = new AtaParticipanteDAO();
-					
-					p.getAta().setIdAta(id);
-					pdao.salvar(p);
-				}
-			}
-			
-			if(ata.getAnexos() != null) {
-				int i = 1;
-				
-				for(Anexo a : ata.getAnexos()) {
-					AnexoDAO adao = new AnexoDAO();
-					
-					a.getAta().setIdAta(id);
-					a.setOrdem(i);
-					adao.salvar(a);
-					i++;
-				}
-			}
-			
-			return id;
-		}catch(Exception e){
-			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
-			
-			throw new Exception(e.getMessage());
-		}
+            try{
+                AtaDAO dao = new AtaDAO();
+
+                int id = dao.salvar(ata);
+
+                if(ata.getPauta() != null){
+                    int i = 1;
+
+                    for(Pauta p : ata.getPauta()){
+                        PautaDAO pdao = new PautaDAO();
+
+                        p.getAta().setIdAta(id);
+                        p.setOrdem(i);
+                        pdao.salvar(p);
+                        i++;
+                    }
+                }
+
+                if(ata.getParticipantes() != null){
+                    for(AtaParticipante p : ata.getParticipantes()){
+                        AtaParticipanteDAO pdao = new AtaParticipanteDAO();
+
+                        p.getAta().setIdAta(id);
+                        pdao.salvar(p);
+                    }
+                }
+
+                if(ata.getAnexos() != null) {
+                    int i = 1;
+
+                    for(Anexo a : ata.getAnexos()) {
+                        AnexoDAO adao = new AnexoDAO(
+                                            new AnexoBuscarPorIdDAO(),
+                                            new AnexoExcluirDAO(),
+                                            new AnexoListarPorAtaDAO(),
+                                            new AnexoSalvarDAO()
+                                        );
+
+                        a.getAta().setIdAta(id);
+                        a.setOrdem(i);
+                        adao.salvar(a);
+                        i++;
+                    }
+                }
+
+                return id;
+            }catch(Exception e){
+                Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+
+                throw new Exception(e.getMessage());
+            }
 	}
 	
 	public boolean temComentarios(Ata ata) throws Exception{
