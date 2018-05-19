@@ -5,15 +5,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import br.edu.utfpr.dv.sireata.dao.AnexoDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoBuscarPorIdDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoExcluirDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoListarPorAtaDAO;
+import br.edu.utfpr.dv.sireata.dao.algorithms.anexo.AnexoSalvarDAO;
 import br.edu.utfpr.dv.sireata.model.Anexo;
 
 public class AnexoBO {
 
 	public Anexo buscarPorId(int id) throws Exception{
 		try{
-			AnexoDAO dao = new AnexoDAO();
+			AnexoDAO dao = new AnexoDAO(
+                                new AnexoBuscarPorIdDAO(),
+                                new AnexoExcluirDAO(),
+                                new AnexoListarPorAtaDAO(),
+                                new AnexoSalvarDAO()
+                        );
 			
-			return dao.buscarPorId(id);
+			return (Anexo) dao.buscar(id);
 		}catch(Exception e){
 			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 			
@@ -23,9 +32,14 @@ public class AnexoBO {
 	
 	public List<Anexo> listarPorAta(int idAta) throws Exception{
 		try{
-			AnexoDAO dao = new AnexoDAO();
+                    AnexoDAO dao = new AnexoDAO(
+                                new AnexoBuscarPorIdDAO(),
+                                new AnexoExcluirDAO(),
+                                new AnexoListarPorAtaDAO(),
+                                new AnexoSalvarDAO()
+                        );
 			
-			return dao.listarPorAta(idAta);
+			return (List<Anexo>) dao.listar(idAta);
 		}catch(Exception e){
 			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 			
@@ -50,7 +64,12 @@ public class AnexoBO {
 			
 			this.validarDados(anexo);
 			
-			AnexoDAO dao = new AnexoDAO();
+			AnexoDAO dao = new AnexoDAO(
+                                new AnexoBuscarPorIdDAO(),
+                                new AnexoExcluirDAO(),
+                                new AnexoListarPorAtaDAO(),
+                                new AnexoSalvarDAO()
+                        );
 			
 			return dao.salvar(anexo);
 		}catch(Exception e){
@@ -66,7 +85,12 @@ public class AnexoBO {
 	
 	public void excluir(int id) throws Exception{
 		try{
-			AnexoDAO dao = new AnexoDAO();
+			AnexoDAO dao = new AnexoDAO(
+                                new AnexoBuscarPorIdDAO(),
+                                new AnexoExcluirDAO(),
+                                new AnexoListarPorAtaDAO(),
+                                new AnexoSalvarDAO()
+                        );
 			
 			dao.excluir(id);
 		}catch(Exception e){
